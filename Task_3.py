@@ -1,18 +1,20 @@
 import sys
-import pathlib
-from colorama import Fore, Back, Style
+from pathlib import Path
+from colorama import Fore, Style
 
-#  python3 Task_3.py /Users/lmohylna/My22/Projects2/goit-pycore-hw-04/goit-pycore-hw-04/
 
-dir_path = pathlib.Path(sys.argv[1])
-
-if dir_path.exists():
-    for item in dir_path.iterdir():
+def list_directories(path: Path, prefix=""):
+    print(f'{prefix}{Fore.BLUE}{path.name} /{Style.RESET_ALL}')
+    for item in sorted(path.iterdir()):
+        if item.is_file():
+            print(f'{prefix}   {Fore.GREEN}{item.name}{Style.RESET_ALL}')
+    for item in sorted(path.iterdir()):
         if item.is_dir():
-            print(f'{Fore.RED}{item}{Style.RESET_ALL}')
-           
-        elif item.is_file:
-            print(f'{Fore.GREEN}{item}{Style.RESET_ALL}')
-          
+            list_directories(item, prefix + "   ")
+
+dir_path = Path(sys.argv[1])
+
+if not dir_path.exists():
+    print(f'{Fore.RED} Директорія не знайдена.{Style.RESET_ALL}')
 else:
-    print(f"Ошибка: Директория не найдена.")
+    list_directories(dir_path)
